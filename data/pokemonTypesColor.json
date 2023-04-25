@@ -1,0 +1,22 @@
+[
+  { "pokemonType": "normal", "color": "#A8A878" },
+  { "pokemonType": "fighting", "color": "#C03028" },
+  { "pokemonType": "flying", "color": "#A890F0" },
+  { "pokemonType": "poison", "color": "#A040A0" },
+  { "pokemonType": "ground", "color": "#E0C068" },
+  { "pokemonType": "rock", "color": "#B8A038" },
+  { "pokemonType": "bug", "color": "#A8B820" },
+  { "pokemonType": "ghost", "color": "#705898" },
+  { "pokemonType": "steel", "color": "#B8B8D0" },
+  { "pokemonType": "fire", "color": "#F08030" },
+  { "pokemonType": "water", "color": "#6890F0" },
+  { "pokemonType": "grass", "color": "#78C850" },
+  { "pokemonType": "electric", "color": "#F8D030" },
+  { "pokemonType": "psychic", "color": "#F85888" },
+  { "pokemonType": "ice", "color": "#98D8D8" },
+  { "pokemonType": "dragon", "color": "#7038F8" },
+  { "pokemonType": "dark", "color": "#705848" },
+  { "pokemonType": "fairy", "color": "#EE99AC" },
+  { "pokemonType": "unknown", "color": "#68A090" },
+  { "pokemonType": "shadow", "color": "#493963" }
+]

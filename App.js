@@ -1,19 +1,15 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
+import PokemonTypeScreen from "./screens/PokemonTypeScreen";
+import Colors from "./constants/color";
 
 export default function App() {
   return (
     <>
-      <StatusBar style="light" />
-      <View style={styles.container}>
-        <Text>Pokemon app!</Text>
-        <Image
-          source={{
-            uri: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/249.png",
-          }}
-          style={styles.image}
-        />
-      </View>
+      <StatusBar style="dark" />
+      <SafeAreaView style={styles.container}>
+        <PokemonTypeScreen />
+      </SafeAreaView>
     </>
   );
 }
@@ -21,12 +17,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.backgroundAppColor,
     alignItems: "center",
     justifyContent: "center",
-  },
-  image: {
-    width: 200,
-    height: 200,
   },
 });
