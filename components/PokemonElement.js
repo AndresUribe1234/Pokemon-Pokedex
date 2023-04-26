@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import Colors from "../constants/color";
 import { useEffect, useState } from "react";
 import { pokemonTypesColor } from "../data/pokemonTypes";
+import { useNavigation } from "@react-navigation/native";
 
 const PokemonElement = (props) => {
   const [pokemonInformation, setPokemonInformation] = useState("");
@@ -10,10 +11,10 @@ const PokemonElement = (props) => {
   let pokemonName = props.pokemonName;
   pokemonName = pokemonName.replace(/-/g, " ");
   pokemonName = pokemonName[0].toUpperCase() + pokemonName.substring(1);
+  const navigation = useNavigation();
 
   const getPokemonInformation = async (url) => {
     try {
-      console.log("type inside fetch", url);
       const response = await fetch(url);
       let data = await response.json();
 
@@ -30,10 +31,9 @@ const PokemonElement = (props) => {
     getPokemonInformation(pokemonAPIEndpoing);
   }, []);
 
-  console.log(pokemonInformation.types);
-
   const pressHandler = () => {
     console.log(`${pokemonName} was pressed!`);
+    navigation.navigate("Pokemon detail", { pokemon: props.pokemonName });
   };
 
   return (

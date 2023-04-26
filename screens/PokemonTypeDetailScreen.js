@@ -12,13 +12,14 @@ const PokemonTypeDetailScreen = (props) => {
   const navigation = useNavigation();
   const type = route.params.type;
 
-  navigation.setOptions({
-    title: `${type[0].toUpperCase() + type.substring(1)} type pokemon`,
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      title: `${type[0].toUpperCase() + type.substring(1)} type pokemon`,
+    });
+  }, [navigation, type]);
 
   const getAllPokemonsOfType = async (type) => {
     try {
-      console.log("type inside fetch", type);
       const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
       let data = await response.json();
 
