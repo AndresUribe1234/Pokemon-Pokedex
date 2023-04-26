@@ -71,14 +71,10 @@ const pokemonTypeColors = pokemonTypes.map((pokemonType) => ({
 
 console.log(pokemonTypeColors);
 
-fs.writeFile(
-  "pokemonTypesColor.json",
-  JSON.stringify(pokemonTypeColors),
-  (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log("Results saved to pokemonTypes.json");
+fs.writeFile("pokemonTypesColor.json", JSON.stringify(typeColors), (err) => {
+  if (err) {
+    console.error(err);
+    return;
   }
-);
+  console.log("Results saved to pokemonTypes.json");
+});

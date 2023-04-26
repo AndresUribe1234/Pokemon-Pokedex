@@ -17,8 +17,6 @@ export const pokemonTypes = [
   "dragon",
   "dark",
   "fairy",
-  "unknown",
-  "shadow",
 ];
 
 export const pokemonTypesColor = {

@@ -1,24 +1,31 @@
-import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
+import { View, StyleSheet, ScrollView, Text, Dimensions } from "react-native";
 import { pokemonTypes } from "../data/pokemonTypes";
 import Colors from "../constants/color";
 import PokemonType from "../components/PokemonType";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const PokemonTypeScreen = () => {
+const ScreenWidth = Dimensions.get("window").width;
+
+const PokemonTypeScreen = (props) => {
+  const navigateHandler = (type) => {
+    console.log(`${type} btn pressed!`);
+    props.navigation.navigate("Pokemon by type", { type: type });
+  };
+
   return (
     <View style={styles.screen}>
-      <Text>Pokedex</Text>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{
-            uri: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/249.png",
-          }}
-          style={styles.image}
-        />
+      <View style={styles.upperSection}>
+        <MaterialCommunityIcons name="pokemon-go" size={30} color="black" />
+        <Text style={styles.title}>Pokemon types</Text>
       </View>
       <ScrollView>
         <View style={styles.typeContainer}>
           {pokemonTypes.map((ele, index) => (
-            <PokemonType type={ele} key={index} />
+            <PokemonType
+              type={ele}
+              key={index}
+              onPress={navigateHandler.bind(this, ele)}
+            />
           ))}
         </View>
       </ScrollView>
@@ -29,26 +36,27 @@ const PokemonTypeScreen = () => {
 export default PokemonTypeScreen;
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, alignItems: "center", padding: 20, gap: 10 },
+  screen: { flex: 1, alignItems: "center", padding: 20 },
+  upperSection: {
+    flexDirection: "row",
+    borderWidth: 2,
+    borderColor: Colors.sectionLineBreakColor,
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    padding: 10,
+    width: 200,
+    marginBottom: 20,
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
   typeContainer: {
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    backgroundColor: Colors.backgroundAppColor,
     alignItems: "center",
     justifyContent: "center",
     columnGap: 20,
-  },
-  imageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    overflow: "hidden",
-    borderWidth: 2,
-    padding: 12,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
   },
 });
