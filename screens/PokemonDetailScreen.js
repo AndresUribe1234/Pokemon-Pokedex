@@ -7,13 +7,15 @@ import {
   Pressable,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Spinner from "../components/Spinner";
 import Colors from "../constants/color";
 import { pokemonTypesColor } from "../data/pokemonTypes";
 import FavoriteBtn from "../components/FavoriteBtn";
+import { FavoritePokemonContext } from "../store/favorites-context";
 
 const PokemonDetailScreen = (props) => {
+  const FavPokemonCtx = useContext(FavoritePokemonContext);
   const navigation = useNavigation();
   const router = useRoute();
   const [pokemon, setPokemon] = useState(router.params.pokemon);
@@ -32,11 +34,28 @@ const PokemonDetailScreen = (props) => {
   useEffect(() => {
     navigation.setOptions({
       title: `${pokemon[0].toUpperCase() + pokemon.substring(1)}`,
-      headerRight: () => {
-        return <FavoriteBtn />;
-      },
     });
   }, [navigation, pokemon]);
+
+  useEffect(() => {
+    const pokemonNameArray = FavPokemonCtx.favoritePokemon.map(
+      (ele) => ele.pokemonName
+    );
+    if (pokemonInformation) {
+      navigation.setOptions({
+        headerRight: () => {
+          return (
+            <FavoriteBtn
+              isFavorite={pokemonNameArray.includes(pokemon)}
+              pokemonName={pokemon}
+              pokemonUrl={pokemonInformation?.sprites?.front_default}
+              pokemonType={pokemonInformation.types}
+            />
+          );
+        },
+      });
+    }
+  }, [navigation, pokemon, pokemonInformation, FavPokemonCtx.favoritePokemon]);
 
   const getPokemonInformation = async (url) => {
     try {
@@ -110,7 +129,6 @@ const PokemonDetailScreen = (props) => {
   }, [pokemonEvolutionChainUrl]);
 
   const pressHandler = (pokemon) => {
-    console.log(`${pokemon} pressed!`);
     navigation.navigate("Pokemon detail", { pokemon: pokemon });
   };
 
