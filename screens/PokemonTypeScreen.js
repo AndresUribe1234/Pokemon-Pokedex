@@ -3,10 +3,23 @@ import { pokemonTypes } from "../data/pokemonTypes";
 import Colors from "../constants/color";
 import PokemonType from "../components/PokemonType";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useEffect } from "react";
+import HomeBtn from "../components/HomeBtn";
+import { useNavigation } from "@react-navigation/native";
 
 const ScreenWidth = Dimensions.get("window").width;
 
 const PokemonTypeScreen = (props) => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({
+      title: `Pokedex`,
+      headerLeft: () => {
+        return <HomeBtn />;
+      },
+    });
+  }, [navigation]);
+
   const navigateHandler = (type) => {
     props.navigation.navigate("Pokemon by type", { type: type });
   };

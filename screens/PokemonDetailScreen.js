@@ -11,19 +11,18 @@ import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
 import Colors from "../constants/color";
 import { pokemonTypesColor } from "../data/pokemonTypes";
+import FavoriteBtn from "../components/FavoriteBtn";
 
-PokemonDetailScreen = (props) => {
+const PokemonDetailScreen = (props) => {
   const navigation = useNavigation();
   const router = useRoute();
   const [pokemon, setPokemon] = useState(router.params.pokemon);
-
   const [pokemonInformation, setPokemonInformation] = useState("");
   const [fetchingData, setFetchingData] = useState(true);
   const [pokemonSpeciesUrl, setPokemonSpeciesUrl] = useState("");
   const [pokemonSpeciesInformation, setPokemonSpeciesInformation] =
     useState("");
   const [pokemonEvolutionChainUrl, setPokemonEvolutionChainUrl] = useState("");
-
   const [pokemonEvolutionArray, setEvolutionsArray] = useState("");
 
   useEffect(() => {
@@ -33,6 +32,9 @@ PokemonDetailScreen = (props) => {
   useEffect(() => {
     navigation.setOptions({
       title: `${pokemon[0].toUpperCase() + pokemon.substring(1)}`,
+      headerRight: () => {
+        return <FavoriteBtn />;
+      },
     });
   }, [navigation, pokemon]);
 
