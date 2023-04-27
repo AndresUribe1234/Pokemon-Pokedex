@@ -8,6 +8,7 @@ const PokemonTypeDetailScreen = (props) => {
   const [fetchingData, setFetchingData] = useState(true);
   const [pokemon, setPokemon] = useState();
   const [numPokemon, setNumPokemon] = useState();
+  const [finishPokemonList, setFinishPokemonList] = useState(false);
   const route = useRoute();
   const navigation = useNavigation();
   const type = route.params.type;
@@ -46,13 +47,15 @@ const PokemonTypeDetailScreen = (props) => {
           <Text style={styles.titleText}>{`Total: ${numPokemon} pokemon`}</Text>
           <ScrollView>
             <View style={styles.resultsContainer}>
-              {pokemon.map((ele, index) => (
-                <PokemonElement
-                  key={index}
-                  pokemonName={ele.name}
-                  url={ele.url}
-                />
-              ))}
+              {pokemon.map((ele, index) => {
+                return (
+                  <PokemonElement
+                    key={index}
+                    pokemonName={ele.name}
+                    url={ele.url}
+                  />
+                );
+              })}
             </View>
           </ScrollView>
         </View>

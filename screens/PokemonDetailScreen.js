@@ -1,25 +1,34 @@
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner";
 import Colors from "../constants/color";
+import { pokemonTypesColor } from "../data/pokemonTypes";
 
 PokemonDetailScreen = (props) => {
   const navigation = useNavigation();
   const router = useRoute();
-  const pokemon = router.params.pokemon;
+  const [pokemon, setPokemon] = useState(router.params.pokemon);
+
   const [pokemonInformation, setPokemonInformation] = useState("");
   const [fetchingData, setFetchingData] = useState(true);
   const [pokemonSpeciesUrl, setPokemonSpeciesUrl] = useState("");
   const [pokemonSpeciesInformation, setPokemonSpeciesInformation] =
     useState("");
   const [pokemonEvolutionChainUrl, setPokemonEvolutionChainUrl] = useState("");
-  const [
-    pokemonEvolutionChainInformation,
-    setPokemonEvolutionChainInformation,
-  ] = useState("");
 
-  const [pokemonEvolutionArray, setEvolutions] = useState("");
+  const [pokemonEvolutionArray, setEvolutionsArray] = useState("");
+
+  useEffect(() => {
+    setPokemon(router.params.pokemon);
+  }, [pokemon, router]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,7 +38,6 @@ PokemonDetailScreen = (props) => {
 
   const getPokemonInformation = async (url) => {
     try {
-      console.log("type inside fetch", url);
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon/${pokemon}`
       );
@@ -47,16 +55,14 @@ PokemonDetailScreen = (props) => {
 
   useEffect(() => {
     getPokemonInformation(pokemon);
-  }, []);
+  }, [pokemon]);
 
   const getPokemonSpeciesInformation = async (url) => {
     try {
-      console.log("type inside fetch", url);
       const response = await fetch(url);
       let data = await response.json();
 
       if (response.status === 200) {
-        console.log("succes api call!");
         setPokemonSpeciesInformation(data);
         setPokemonEvolutionChainUrl(data.evolution_chain);
       }
@@ -67,7 +73,6 @@ PokemonDetailScreen = (props) => {
 
   useEffect(() => {
     if (pokemonSpeciesUrl !== "") {
-      console.log("run second api");
       getPokemonSpeciesInformation(pokemonSpeciesUrl);
     }
   }, [pokemonSpeciesUrl]);
@@ -85,15 +90,11 @@ PokemonDetailScreen = (props) => {
 
   const getPokemonEvolutionInformation = async (url) => {
     try {
-      console.log("type inside fetch", url);
       const response = await fetch(url);
       let data = await response.json();
 
       if (response.status === 200) {
-        console.log("Success on third api call!");
-        setPokemonEvolutionChainInformation(data);
-        console.log(getEvolutions(data.chain));
-        setEvolutions(getEvolutions(data.chain));
+        setEvolutionsArray(getEvolutions(data.chain));
       }
     } catch (err) {
       console.log(err);
@@ -102,17 +103,21 @@ PokemonDetailScreen = (props) => {
 
   useEffect(() => {
     if (pokemonEvolutionChainUrl !== "") {
-      console.log("run third api");
       getPokemonEvolutionInformation(pokemonEvolutionChainUrl.url);
     }
   }, [pokemonEvolutionChainUrl]);
 
+  const pressHandler = (pokemon) => {
+    console.log(`${pokemon} pressed!`);
+    navigation.navigate("Pokemon detail", { pokemon: pokemon });
+  };
+
   return (
     <View style={styles.screen}>
-      {fetchingData && <Spinner />}
-      {!fetchingData && (
+      {fetchingData && !pokemonEvolutionArray && <Spinner />}
+      {!fetchingData && pokemonEvolutionArray && (
         <View style={styles.sectionContainer}>
-          <View style={styles.imageContainer}>
+          <View style={[styles.imageContainer]}>
             {pokemonInformation?.sprites?.front_default ? (
               <Image
                 source={{
@@ -130,44 +135,65 @@ PokemonDetailScreen = (props) => {
           <View style={styles.informationContainer}>
             <ScrollView>
               <View style={styles.placeholderContainer}>
-                <Text>Type</Text>
+                <Text style={styles.titlteText}>Type</Text>
                 <View style={styles.typeContainer}>
-                  {pokemonInformation.types.map((ele) => (
-                    <Text>{ele.type.name}</Text>
+                  {pokemonInformation.types.map((ele, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        styles.textType,
+                        { backgroundColor: pokemonTypesColor[ele.type.name] },
+                      ]}
+                    >
+                      {ele.type.name[0].toUpperCase() +
+                        ele.type.name.substring(1)}
+                    </Text>
                   ))}
                 </View>
               </View>
               <View style={styles.placeholderContainer}>
-                <Text>Stats</Text>
+                <Text style={styles.titlteText}>Stats</Text>
                 <View style={styles.statsContainer}>
                   {pokemonInformation.stats.map((ele, index) => (
-                    <Text
-                      key={index}
-                    >{`${ele.stat.name} ${ele.base_stat}`}</Text>
+                    <Text key={index}>{`${
+                      ele.stat.name[0].toUpperCase() +
+                      ele.stat.name.substring(1).replace("-", " ")
+                    } ${ele.base_stat}`}</Text>
                   ))}
                 </View>
               </View>
-              {pokemonEvolutionArray && (
-                <View style={styles.placeholderContainer}>
-                  <Text>Evolutions</Text>
-                  <View style={styles.statsContainer}>
-                    {pokemonEvolutionArray.map((ele, index) => (
-                      <Text key={index}>{ele}</Text>
-                    ))}
-                  </View>
+              <View style={styles.placeholderContainer}>
+                <Text style={styles.titlteText}>Evolutions</Text>
+                <View style={styles.statsContainer}>
+                  {pokemonEvolutionArray.map((ele, index) => (
+                    <Pressable
+                      onPress={pressHandler.bind(this, ele)}
+                      key={index}
+                    >
+                      {({ pressed }) => {
+                        return (
+                          <Text
+                            style={[
+                              pressed ? { opacity: 0.5 } : { opacity: 1 },
+                            ]}
+                          >
+                            {ele[0].toUpperCase() + ele.substring(1)}
+                          </Text>
+                        );
+                      }}
+                    </Pressable>
+                  ))}
                 </View>
-              )}
-              {pokemonSpeciesInformation && (
-                <View style={styles.placeholderContainer}>
-                  <Text>Capture Rate</Text>
-                  <Text>{`${(
-                    (pokemonSpeciesInformation.capture_rate / 255) *
-                    100
-                  ).toFixed(1)}% (${
-                    pokemonSpeciesInformation.capture_rate
-                  }/255)`}</Text>
-                </View>
-              )}
+              </View>
+              <View style={styles.placeholderContainer}>
+                <Text style={styles.titlteText}>Capture Rate</Text>
+                <Text>{`${(
+                  (pokemonSpeciesInformation.capture_rate / 255) *
+                  100
+                ).toFixed(1)}% (${
+                  pokemonSpeciesInformation.capture_rate
+                }/255)`}</Text>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -190,6 +216,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     overflow: "hidden",
     backgroundColor: Colors.sectionLineBreakColor,
+    marginBottom: 30,
   },
   image: { height: "100%", width: "100%", resizeMode: "contain" },
   informationContainer: {
@@ -201,6 +228,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 30,
     gap: 10,
+    padding: 8,
+    borderRadius: 8,
   },
   statsContainer: {
     flexDirection: "row",
@@ -209,4 +238,12 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   typeContainer: { flexDirection: "row", gap: 20 },
+  textType: {
+    color: "white",
+    padding: 4,
+    borderRadius: 4,
+    minWidth: 70,
+    textAlign: "center",
+  },
+  titlteText: { fontWeight: "bold" },
 });

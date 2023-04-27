@@ -32,7 +32,6 @@ const PokemonElement = (props) => {
   }, []);
 
   const pressHandler = () => {
-    console.log(`${pokemonName} was pressed!`);
     navigation.navigate("Pokemon detail", { pokemon: props.pokemonName });
   };
 

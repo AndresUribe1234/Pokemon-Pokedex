@@ -8,7 +8,6 @@ const ScreenWidth = Dimensions.get("window").width;
 
 const PokemonTypeScreen = (props) => {
   const navigateHandler = (type) => {
-    console.log(`${type} btn pressed!`);
     props.navigation.navigate("Pokemon by type", { type: type });
   };
 
