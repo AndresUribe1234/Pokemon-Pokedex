@@ -6,7 +6,7 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FavoritePokemonContext } from "../store/favorites-context";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../constants/color";
@@ -14,8 +14,14 @@ import { pokemonTypesColor } from "../data/pokemonTypes";
 
 const FavoritePokemonScreen = () => {
   const FavPokemonCtx = useContext(FavoritePokemonContext);
-  const pokemonArray = FavPokemonCtx.favoritePokemon;
+  const [pokemonArray, setPokemonArray] = useState(
+    FavPokemonCtx.favoritePokemon
+  );
   navigator = useNavigation();
+
+  useEffect(() => {
+    setPokemonArray(FavPokemonCtx.favoritePokemon);
+  }, [FavPokemonCtx.favoritePokemon]);
 
   const pressHandler = (pokemon) => {
     navigator.navigate("Pokemon detail", { pokemon: pokemon });
@@ -26,7 +32,7 @@ const FavoritePokemonScreen = () => {
       {pokemonArray.length < 1 && (
         <Text>User has no favorite pokemon at the moment</Text>
       )}
-      {pokemonArray.length > 1 && (
+      {pokemonArray.length >= 1 && (
         <>
           <Text
             style={styles.titleText}
